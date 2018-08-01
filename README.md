@@ -1,5 +1,6 @@
 # Animal Crossing Music for macOS!
 Listen to Animal Crossing music hour-by-hour from every game, and K.K. Slider on Saturday Nights!
+Download [here (github)](https://github.com/epdavid/ac-music/releases) or [here (mirror)](https://nofile.io/f/BAJ6KBKE51z/AC+Music+2.5.dmg)
 
 ## Credits
 This app was built from the ground up in XCode in Swift for macOS. However, the project was inspired by and is essentially a clone of Jack Carver's "Animal Crossing Music" Google Chrome extension, the website for which is [here for the GitHub](https://github.com/JdotCarver/Animal-Crossing-Music-Extension#) and [here for the Extension download link](https://chrome.google.com/webstore/detail/animal-crossing-music/fcedlaimpcfgpnfdgjbmmfibkklpioop?hl=en).
