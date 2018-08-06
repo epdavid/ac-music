@@ -299,8 +299,10 @@ extension TheViewController {
     @IBAction func stop(_ sender: NSButton) {
         TheViewController.audioPlayer.stop()
         TheViewController.audioPlayer.currentTime = 0
-        keepPlaying = false
-        kkShouldKeepGoing = false
+        if !inKK {
+            keepPlaying = false
+            kkShouldKeepGoing = false
+        }
     }
 }
 

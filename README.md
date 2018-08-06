@@ -8,6 +8,8 @@ This app was built from the ground up in XCode in Swift for macOS. However, the 
 I just wanted to make a version of this app for macOS users that doesn't require Chrome since it is such a resource-hog on macOS! Consider this a solution for non-Chrome users that'll be more friendly on your battery life! Nevertheless, all credit for this idea goes to J. Carver (and whoever he got the idea from; see his documentation).
 
 ## Change Log
+### V. 2.5.2:
+* Fixed an issue with KK Looping. Now acts as intended!
 ### V. 2.5:
 * Added New Leaf rainy music!
 * Fixed a bug where K.K. will automatically start playing on Saturday nights
