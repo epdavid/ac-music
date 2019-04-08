@@ -8,7 +8,8 @@
 
 import Foundation
 import Cocoa
-import AudioKit
+import AVFoundation
+import MediaPlayer
 
 
 public class TownTuneEditor: NSViewController {
@@ -19,7 +20,8 @@ public class TownTuneEditor: NSViewController {
     
     static var tune:[Int?] = []
     
-    let sampler = AKAppleSampler()
+    var sampler: AVAudioUnitSampler!
+    var engine: AVAudioEngine!
     
     let ms: UInt32 = 1000 //For converting usleep times to milliseconds
     
@@ -68,7 +70,7 @@ public class TownTuneEditor: NSViewController {
                 slider!.doubleValue = 1
             }
             else {
-                slider!.doubleValue = Double(availablePitchesMidi.index(of: note)! + 1)
+                slider!.doubleValue = Double(availablePitchesMidi.firstIndex(of: note)! + 1)
             }
         }
         
@@ -79,6 +81,10 @@ public class TownTuneEditor: NSViewController {
 
     override public func viewDidLoad() {
         super.viewDidLoad()
+        engine = AVAudioEngine()
+        sampler = AVAudioUnitSampler()
+        engine.attach(sampler)
+        engine.connect(sampler, to: engine.mainMixerNode, format: nil)
         
         //Loads defaults for Town Tune Enabled
         townTuneEnabled.state = NSControl.StateValue(rawValue: TownTuneEditor.defaults.integer(forKey:"tuneEnabled"))
@@ -89,17 +95,20 @@ public class TownTuneEditor: NSViewController {
         
         //Loads up the tune player
         do{
-            try sampler.loadWav("bellTrimmed_15")
+            try sampler.loadAudioFiles(at: [Bundle.main.url(forResource: "bellTrimmed_15", withExtension: "wav")!])
         } catch{print("whereThatFile?")}
-        sampler.amplitude = 0.2
-        let mix = AKMixer(sampler)
-        AudioKit.output = mix
-        try! AudioKit.start()
+        if !engine.isRunning {
+            do {
+                try engine.start()
+            } catch {
+                print("couldn't start engine")
+            }
+        }
     }
     
     func playSomeNote(note: Int) {
         if (note > 1) {
-            try! sampler.play(noteNumber: MIDINoteNumber(note + 36))
+            sampler.startNote(UInt8(note + 36), withVelocity: 64, onChannel: 0)
         }
     }
     
@@ -142,11 +151,13 @@ public class TownTuneEditor: NSViewController {
                 usleep(250 * ms)
             }
             else if (note == 1) {
-                try! sampler.play(noteNumber: MIDINoteNumber(randNotes[Int(arc4random_uniform(13))] + 36))
+                let randNote = UInt8(randNotes[Int(arc4random_uniform(13))] + 36)
+                sampler.startNote(randNote, withVelocity: 64, onChannel: 0)
                 usleep(250 * ms)
+                
             }
             else {
-                try! sampler.play(noteNumber: MIDINoteNumber(note + 36))
+                sampler.startNote(UInt8(note + 36), withVelocity: 64, onChannel: 0)
                 usleep(250 * ms)
             }
         }

@@ -1,6 +1,6 @@
 # Animal Crossing Music for macOS!
 Listen to Animal Crossing music hour-by-hour from every game, and K.K. Slider on Saturday Nights!
-Download [here (github)](https://github.com/epdavid/ac-music/releases) or [here (mirror)](https://nofile.io/f/BAJ6KBKE51z/AC+Music+2.5.dmg)
+Download [here (github)](https://github.com/epdavid/ac-music/releases)
 
 ## Credits
 This app was built from the ground up in XCode in Swift for macOS. However, the project was inspired by and is essentially a clone of Jack Carver's "Animal Crossing Music" Google Chrome extension, the website for which is [here for the GitHub](https://github.com/JdotCarver/Animal-Crossing-Music-Extension#) and [here for the Extension download link](https://chrome.google.com/webstore/detail/animal-crossing-music/fcedlaimpcfgpnfdgjbmmfibkklpioop?hl=en).
@@ -8,8 +8,9 @@ This app was built from the ground up in XCode in Swift for macOS. However, the 
 I just wanted to make a version of this app for macOS users that doesn't require Chrome since it is such a resource-hog on macOS! Consider this a solution for non-Chrome users that'll be more friendly on your battery life! Nevertheless, all credit for this idea goes to J. Carver (and whoever he got the idea from; see his documentation).
 
 ## Change Log
-### V. 2.5.3:
-* Fixed a few bugs. Window now opens up as main window. Mojave/dark-mode compatibility.
+
+### V. 3.0:
+* Fixed some critical bugginess with the Town Tune. Removed AudioKit. App performance is much improved and much more stable!
 ### V. 2.5.2:
 * Fixed an issue with KK Looping. Now acts as intended!
 ### V. 2.5:

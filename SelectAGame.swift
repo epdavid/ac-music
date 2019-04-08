@@ -12,6 +12,7 @@ import AVFoundation
 import MediaPlayer
 
 public class SelectAGame: NSViewController {
+    
     var hour:Int = Calendar.autoupdatingCurrent.component(.hour, from: Date())
     static let defaults = UserDefaults.standard
     @IBOutlet weak var gameImage: NSImageView!
@@ -59,10 +60,11 @@ public class SelectAGame: NSViewController {
     }
     
     
-    let characters:[NSImage] = [NSImage(named:NSImage.Name("isabelle"))!, NSImage(named:NSImage.Name("blathers"))!, NSImage(named:NSImage.Name("kkSlider"))!, NSImage(named:NSImage.Name("tomnook"))!, NSImage(named:NSImage.Name("mrresetti"))!]
+    let characters:[NSImage] = [NSImage(named:"isabelle")!, NSImage(named:"blathers")!, NSImage(named:"kkSlider")!, NSImage(named:"tomnook")!, NSImage(named:"mrresetti")!]
     
     override public func viewDidLoad() {
         super.viewDidLoad()
+        NSApp.activate(ignoringOtherApps: true)
         prefChangeImage()
         randCharacterImage()
         enableKK.state = NSControl.StateValue(rawValue: SelectAGame.defaults.integer(forKey: "enableKK"))
@@ -96,15 +98,15 @@ public class SelectAGame: NSViewController {
     func prefChangeImage() {
         switch TheViewController.game {
         case "nl":
-            gameImage.image = NSImage(named:NSImage.Name("newleaflogo"))
+            gameImage.image = NSImage(named:"newleaflogo")
         case "ww":
-            gameImage.image = NSImage(named:NSImage.Name("cityfolklogo"))
+            gameImage.image = NSImage(named:"cityfolklogo")
         case "ac":
-            gameImage.image = NSImage(named:NSImage.Name("animalcrossinglogo"))
+            gameImage.image = NSImage(named:"animalcrossinglogo")
         case "nlrn":
-            gameImage.image = NSImage(named:NSImage.Name("newleafrainlogo"))
+            gameImage.image = NSImage(named:"newleafrainlogo")
         default:
-            gameImage.image = NSImage(named:NSImage.Name("newleaflogo"))
+            gameImage.image = NSImage(named:"newleaflogo")
         }
     }
     

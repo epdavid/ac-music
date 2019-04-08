@@ -26,7 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         if let button = statusItem.button {
-            button.image = NSImage(named:NSImage.Name("icon40"))
+            button.image = NSImage(named:"icon40")
             button.action = #selector(togglePopover(_:))
         }
         popover.contentViewController = TheViewController.freshController()

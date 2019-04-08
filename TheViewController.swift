@@ -10,7 +10,6 @@ import Cocoa
 import AVFoundation
 import MediaPlayer
 import Foundation
-import AudioKit
 
 public class TheViewController: NSViewController, AVAudioPlayerDelegate, NSUserNotificationCenterDelegate {
     
@@ -23,7 +22,8 @@ public class TheViewController: NSViewController, AVAudioPlayerDelegate, NSUserN
     var enterKK:Bool = false
     var kkShouldKeepGoing:Bool = false
     static var game:String = (SelectAGame.defaults.string(forKey: "game") != nil) ? SelectAGame.defaults.string(forKey: "game")! : "nl"
-    let sampler = AKAppleSampler()
+    var sampler: AVAudioUnitSampler!
+    var engine: AVAudioEngine!
     let ms: UInt32 = 1000 //For converting usleep times to milliseconds
     static var tune = (TownTuneEditor.defaults.object(forKey: "tune") != nil) ? TownTuneEditor.defaults.object(forKey: "tune") as! [Int] : TownTuneEditor.defaultTune
     let randNotes = [19, 21, 23, 24, 26, 28, 29, 31, 33, 35, 36, 38, 40]
@@ -46,6 +46,10 @@ public class TheViewController: NSViewController, AVAudioPlayerDelegate, NSUserN
     override public func viewDidLoad() {
         super.viewDidLoad()
         // Do view setup here.
+        engine = AVAudioEngine()
+        sampler = AVAudioUnitSampler()
+        engine.attach(sampler)
+        engine.connect(sampler, to: engine.mainMixerNode, format: nil)
         let hour = Calendar.autoupdatingCurrent.component(.hour, from: Date())
         TheViewController.url = Bundle.main.url(forResource: "\(TheViewController.game)/\(hour)", withExtension: "mp3")
         
@@ -63,12 +67,15 @@ public class TheViewController: NSViewController, AVAudioPlayerDelegate, NSUserN
             print("Where is my URL??")
         }
         do{
-            try sampler.loadWav("clockChimes")
+            try sampler.loadAudioFiles(at: [Bundle.main.url(forResource: "clockChimes", withExtension: "wav")!])
         } catch{print("whereThatFile?")}
-        sampler.amplitude = 0.50
-        let mix = AKMixer(sampler)
-        AudioKit.output = mix
-        try! AudioKit.start()
+        if !engine.isRunning {
+            do {
+                try engine.start()
+            } catch {
+                print("couldn't start engine")
+            }
+        }
     }
     
     
@@ -138,7 +145,7 @@ public class TheViewController: NSViewController, AVAudioPlayerDelegate, NSUserN
                     notification.identifier = "unique-id2"
                     notification.title = "Animal Crossing Music"
                     notification.subtitle = "KK Slider has begun to play!"
-                    notification.contentImage = NSImage(named:NSImage.Name("kkSlider"))
+                    notification.contentImage = NSImage(named:"kkSlider")
                     
                     let notificationCenter = NSUserNotificationCenter.default
                     
@@ -240,11 +247,11 @@ public class TheViewController: NSViewController, AVAudioPlayerDelegate, NSUserN
                                     usleep(600 * self.ms)
                                 }
                                 else if (note == 1){
-                                    try! self.sampler.play(noteNumber: MIDINoteNumber(self.randNotes[Int(arc4random_uniform(13))] + 24))
+                                    try! self.sampler.startNote( UInt8(self.randNotes[Int(arc4random_uniform(13))] + 24), withVelocity: 64, onChannel:0)
                                     usleep(600 * self.ms)
                                 }
                                 else {
-                                    try! self.sampler.play(noteNumber: MIDINoteNumber(note + 24))
+                                    try! self.sampler.startNote(UInt8(note + 24), withVelocity: 64, onChannel: 0)
                                     usleep(600 * self.ms)
                                 }
                             }
@@ -275,9 +282,9 @@ extension TheViewController {
     // MARK: Storyboard instantiation
     static func freshController() -> TheViewController {
         //1.
-        let storyboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
+        let storyboard = NSStoryboard(name: "Main", bundle: nil)
         //2.
-        let identifier = NSStoryboard.SceneIdentifier(rawValue: "TheViewController")
+        let identifier = "TheViewController"
         //3.
         guard let viewcontroller = storyboard.instantiateController(withIdentifier: identifier) as? TheViewController else {
             fatalError("Why cant i find TheViewController? - Check Main.storyboard")
